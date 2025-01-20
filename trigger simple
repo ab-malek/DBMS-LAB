@@ -1,0 +1,7 @@
+CREATE TRIGGER is_cutomer_inserted
+ON customer
+FOR INSERT
+AS
+BEGIN
+	print('Data inserted in table customer')
+END
