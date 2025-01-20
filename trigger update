@@ -1,0 +1,40 @@
+--Update items table regarding to transactions table
+
+CREATE TABLE items(
+	item_id INT PRIMARY KEY IDENTITY(1,1),
+	item_amount INT,
+	item_price DECIMAL(5,2)
+);
+
+SELECT * FROM items;
+
+INSERT INTO items(item_amount, item_price)
+VALUES (20,5.5),
+		(20,3),
+		(20,10);
+
+CREATE TABLE transactions(
+	t_id INT PRIMARY KEY IDENTITY(1,1),
+	item_id INT,
+	item_amount INT,
+	t_time DATE DEFAULT GETDATE()
+);
+
+INSERT INTO transactions (item_id, item_amount)
+VALUES(2,5);
+
+SELECT * FROM transactions;
+
+CREATE TRIGGER transaction_insert
+ON transactions
+FOR INSERT
+AS 
+BEGIN
+	DECLARE @item_id INT, @amount INT
+	SELECT @item_id = item_id, @amount = item_amount FROM INSERTED
+	UPDATE items
+	SET item_amount = item_amount - @amount
+	WHERE item_id = @item_id
+END;
+
+
